@@ -6,26 +6,27 @@
 #define PIN_RGB_B GPIO_NUM_10
 
 void blink(uint8_t pin, uint32_t millis);
+void init_leds();
 void set_RGB_LED(bool R_on, bool G_on, bool B_on);
 
 void setup() {
-  pinMode(PIN_LED,OUTPUT);
-  pinMode(PIN_RGB_R,OUTPUT);
-  pinMode(PIN_RGB_G,OUTPUT);
-  pinMode(PIN_RGB_B,OUTPUT);
-  set_RGB_LED(1,1,1);
+  init_leds();
   delay(1000);
 }
 
 void loop() {
-  blink(PIN_LED,100);
-  
   set_RGB_LED(1,0,0);
-  delay(200);
+  delay(100);
+  set_RGB_LED(1,1,0);
+  delay(100);
   set_RGB_LED(0,1,0);
-  delay(200);
+  delay(100);
+  set_RGB_LED(0,1,1);
+  delay(100);
   set_RGB_LED(0,0,1);
-  delay(200);
+  delay(100);
+  set_RGB_LED(1,0,1);
+  delay(100);
 }
 
 void blink(uint8_t pin, uint32_t millis) {
@@ -33,6 +34,14 @@ void blink(uint8_t pin, uint32_t millis) {
   delay(millis);
   digitalWrite(pin,LOW);
   delay(millis);
+}
+
+void init_leds() {
+  pinMode(PIN_LED,OUTPUT);
+  pinMode(PIN_RGB_R,OUTPUT);
+  pinMode(PIN_RGB_G,OUTPUT);
+  pinMode(PIN_RGB_B,OUTPUT);
+  digitalWrite(PIN_LED,HIGH);
 }
 
 void set_RGB_LED(bool R_on, bool G_on, bool B_on) {
