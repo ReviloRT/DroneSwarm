@@ -48,6 +48,7 @@ public:
         Delta_v(0) 
         { Delta_R.eye();};
     
+    virtual void init();
     void update();
     void zero_integral();
     void print();
@@ -62,7 +63,7 @@ protected:
     float _temp;
 public:
     BMI323() : Preintegrator(), _temp(0){};
-    void init();
+    void init() override;
     void print_raw();
 };
 

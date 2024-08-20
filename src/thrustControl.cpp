@@ -1,14 +1,14 @@
-#include "controller.hpp"
+#include "thrustControl.hpp"
 
-void Controller::init() {
+void ThrustControl::init() {
     rotors.init();
 }
 
-void Controller::on() {
+void ThrustControl::on() {
     rotors.on(ROTOR_PWM_RESOLUTION);
 }
 
-void Controller::off() {
+void ThrustControl::off() {
     rotors.stop(MOTOR_1);
     rotors.stop(MOTOR_2);
     rotors.stop(MOTOR_3);
@@ -16,7 +16,7 @@ void Controller::off() {
     rotors.off();
 }
 
-void Controller::update(TF4 new_effort) {
+void ThrustControl::update(TF4 new_effort) {
     control_effort = new_effort;
     TF4 thrusts = mixer % control_effort;
 
@@ -26,6 +26,6 @@ void Controller::update(TF4 new_effort) {
     rotors.power(MOTOR_4,_thrust_to_pwm(thrusts(3)));
 }
 
-int Controller::_thrust_to_pwm(float thrust) {
+int ThrustControl::_thrust_to_pwm(float thrust) {
     return static_cast<int>(min(max(thrust*THRUST_TO_PWM_SCALING,-1.0f),1.0f) * 128);
 }

@@ -14,7 +14,7 @@ using namespace Fastor;
 using TF4 = Tensor<float,4>;
 using TF4x4 = Tensor<float,4,4>;
 
-class Controller {
+class ThrustControl {
 private:
     Rotors rotors;
     const TF4x4 mixer;
@@ -24,7 +24,7 @@ private:
 public:
     TF4 control_effort;
 
-    Controller() : 
+    ThrustControl() : 
         control_effort{0},
         mixer{
             { 0.25,-0.25/QUAD_MIXER_LENGTH, 0.25/QUAD_MIXER_LENGTH, 0.25/QUAD_MIXER_GAMMA},
