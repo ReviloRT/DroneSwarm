@@ -19,28 +19,11 @@ void Preintegrator::update() {
     _preintegrate();
 }
 
-float Preintegrator::get_t() {
-    return _Delta_t;
-}
-
-TF3 Preintegrator::get_p() {
-    return _Delta_p;
-}
-
-TF3 Preintegrator::get_v() {
-    return _Delta_v;
-}
-
-TF3x3 Preintegrator::get_R() {
-    return _Delta_R;
-}
 void Preintegrator::zero_integral() {
-    // _Delta_t = 0;
+    // Delta_t = 0;
     // _Delta_p.zeros();
-    // _Delta_v.zeros();
-    // _Delta_R.eye();
-    _Delta_v(2) -= 0.85;
-    _Delta_p(2) -= 0.85;
+    // Delta_v.zeros();
+    // Delta_R.eye();
 }
 
 auto Preintegrator::_rot_exp(TMF3 &vect,float dt) {
@@ -86,28 +69,28 @@ void Preintegrator::_preintegrate() {
     // print_TF3(del_v);
     // print_TF3x3(del_R);
 
-    _Delta_t += del_t;
-    _Delta_p = evaluate(_Delta_p + _Delta_v*del_t + _Delta_R % del_p);
-    _Delta_v = evaluate(_Delta_v + _Delta_R % del_v);
-    _Delta_R = evaluate(_Delta_R % del_R);
+    Delta_t += del_t;
+    Delta_p = evaluate(Delta_p + Delta_v*del_t + Delta_R % del_p);
+    Delta_v = evaluate(Delta_v + Delta_R % del_v);
+    Delta_R = evaluate(Delta_R % del_R);
 
     // Serial.println("Deltas");
     // print_TF3(_Delta_p);
-    // print_TF3(_Delta_v);
-    // print_TF3x3(_Delta_R);
+    // print_TF3(Delta_v);
+    // print_TF3x3(Delta_R);
 
     _prev_sample_t = _this_sample_t;
 }
 
 void Preintegrator::print() {
-    Serial.printf(">t:%f\n", _Delta_t);
-    Serial.printf(">px:%f\n",_Delta_p(0));
-    Serial.printf(">py:%f\n",_Delta_p(1));
-    Serial.printf(">pz:%f\n",_Delta_p(2));
-    Serial.printf(">vx:%f\n",_Delta_v(0));
-    Serial.printf(">vy:%f\n",_Delta_v(1));
-    Serial.printf(">vz:%f\n",_Delta_v(2));
-    Serial.printf("R:[\n[%f, %f, %f]\n[%f, %f, %f]\n[%f, %f, %f]\n] \n", _Delta_R(0,0), _Delta_R(0,1), _Delta_R(0,2), _Delta_R(1,0), _Delta_R(1,1), _Delta_R(1,2), _Delta_R(2,0), _Delta_R(2,1), _Delta_R(2,2));
+    Serial.printf(">t:%f\n", Delta_t);
+    Serial.printf(">px:%f\n",Delta_p(0));
+    Serial.printf(">py:%f\n",Delta_p(1));
+    Serial.printf(">pz:%f\n",Delta_p(2));
+    Serial.printf(">vx:%f\n",Delta_v(0));
+    Serial.printf(">vy:%f\n",Delta_v(1));
+    Serial.printf(">vz:%f\n",Delta_v(2));
+    Serial.printf("R:[\n[%f, %f, %f]\n[%f, %f, %f]\n[%f, %f, %f]\n] \n", Delta_R(0,0), Delta_R(0,1), Delta_R(0,2), Delta_R(1,0), Delta_R(1,1), Delta_R(1,2), Delta_R(2,0), Delta_R(2,1), Delta_R(2,2));
 }
 
 

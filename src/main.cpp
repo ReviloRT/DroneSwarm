@@ -36,7 +36,7 @@ void loop() {
   Serial.printf("Waited: %f micros \n",(double)waited/(double)counter);
 
   TF3 up_unit = {0,0,1};
-  TF3 up = imu.get_R() % up_unit;
+  TF3 up = imu.Delta_R % up_unit;
   Serial.printf(">ux:%f\n",up(0));
   Serial.printf(">uy:%f\n",up(1));
   Serial.printf(">uz:%f\n",up(2)); 
