@@ -2,7 +2,9 @@
 #include <Wire.h>
 #include "imu.hpp"
 #include "led.hpp"
+#include "controller.hpp"
 
+Controller control;
 BMI323 imu;
 
 void setup() {
@@ -13,33 +15,46 @@ void setup() {
   set_RGB_LED(1,1,1);
 
   imu.init();
+  control.init();
+
+  delay(1000);
+  control.on();
 }
 
 void loop() {
-  set_RGB_LED(0,1,0);
-  
-  uint32_t end1 = millis() + 100;
-  uint64_t waited = 0;
-  int counter = 0;
-  while (millis() < end1) {
-    uint64_t end2 = micros() + 1000;
-    imu.update();
-    waited += max(end2 - micros(),0ull);
-    while (micros() < end2) {
-      asm("NOP");
-    }
-    counter ++;
+
+  control.on();
+
+  set_RGB_LED(1,1,0);
+  for (size_t i = 0; i < 100; i++) {
+    control.control_effort = {i/100.0f,0.0f,0.0f,0.0f};
+    control.update();
+    delay(20);
   }
-  // imu.print_raw();
-  // imu.print();
 
-  Serial.printf("Waited: %f micros \n",(double)waited/(double)counter);
+  set_RGB_LED(0,1,0);
+  delay(2000);
 
-  TF3 up_unit = {0,0,1};
-  TF3 up = imu.Delta_R % up_unit;
-  Serial.printf(">ux:%f\n",up(0));
-  Serial.printf(">uy:%f\n",up(1));
-  Serial.printf(">uz:%f\n",up(2)); 
+  set_RGB_LED(0,1,1);
+  control.control_effort = {0.0f,1.0f,0.0f,0.0f};
+  control.update();
+  delay(1000);
 
-  imu.zero_integral();
+  set_RGB_LED(0,0,1);
+  control.control_effort = {0.0f,0.0f,1.0f,0.0f};
+  control.update();
+  delay(1000);
+
+  set_RGB_LED(1,0,1);
+  control.control_effort = {0.0f,0.0f,0.0f,1.0f};
+  control.update();
+  delay(1000);
+
+  set_RGB_LED(1,1,0);
+  for (size_t i = 0; i < 100; i++) {
+    control.control_effort = {1.0f-i/100.0f,0.0f,0.0f,0.0f};
+    control.update();
+    delay(20);
+  }
+  
 }

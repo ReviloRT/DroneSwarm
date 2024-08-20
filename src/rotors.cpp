@@ -38,18 +38,13 @@ void Rotors::off() {
 }
 
 void Rotors::power(MotorSelect motor, int power) {
-    // if (power == 0) {
-    //    analogWrite(motor_EN_pin(motor),0); 
-    //    return;
-    // }
 
-    // if (power > 0) {
-    //     digitalWrite(motor_PH_pin(motor),LOW);
-    // } else {
-    //     digitalWrite(motor_PH_pin(motor),HIGH);
-    // }
+    if (power > 0) {
+        digitalWrite(motor_PH_pin(motor),LOW);
+    } else {
+        digitalWrite(motor_PH_pin(motor),HIGH);
+    }
 
-    // int8_t int_power = abs(power)/100*255;
     analogWrite(motor_EN_pin(motor),power);
 }
 
