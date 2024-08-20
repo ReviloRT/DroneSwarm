@@ -27,8 +27,7 @@ void loop() {
 
   set_RGB_LED(1,1,0);
   for (size_t i = 0; i < 100; i++) {
-    control.control_effort = {i/100.0f,0.0f,0.0f,0.0f};
-    control.update();
+    control.update({i/100.0f,0.0f,0.0f,0.0f});
     delay(20);
   }
 
@@ -36,24 +35,20 @@ void loop() {
   delay(2000);
 
   set_RGB_LED(0,1,1);
-  control.control_effort = {0.0f,1.0f,0.0f,0.0f};
-  control.update();
+  control.update({0.0f,1.0f,0.0f,0.0f});
   delay(1000);
 
   set_RGB_LED(0,0,1);
-  control.control_effort = {0.0f,0.0f,1.0f,0.0f};
-  control.update();
+  control.update({0.0f,0.0f,1.0f,0.0f});
   delay(1000);
 
   set_RGB_LED(1,0,1);
-  control.control_effort = {0.0f,0.0f,0.0f,1.0f};
-  control.update();
+  control.update({0.0f,0.0f,0.0f,1.0f});
   delay(1000);
 
   set_RGB_LED(1,1,0);
   for (size_t i = 0; i < 100; i++) {
-    control.control_effort = {1.0f-i/100.0f,0.0f,0.0f,0.0f};
-    control.update();
+    control.update({1.0f-i/100.0f,0.0f,0.0f,0.0f});
     delay(20);
   }
   

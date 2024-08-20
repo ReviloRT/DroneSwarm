@@ -16,7 +16,7 @@ void Controller::off() {
     rotors.off();
 }
 
-void Controller::update() {
+void Controller::update(TF4 control_effort) {
     TF4 thrusts = mixer % control_effort;
 
     rotors.power(MOTOR_1,_thrust_to_pwm(thrusts(0)));

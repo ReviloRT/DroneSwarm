@@ -36,6 +36,6 @@ public:
     void init();
     void on();
     void off();
-    void update();
+    void update(TF4 control_effort);
     
 };
