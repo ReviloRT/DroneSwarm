@@ -13,17 +13,16 @@ void print_TF3x3(TF3x3 &m) {
     Serial.printf("M:[\n[%f, %f, %f]\n[%f, %f, %f]\n[%f, %f, %f]\n] \n", m(0,0), m(0,1), m(0,2), m(1,0), m(1,1), m(1,2), m(2,0), m(2,1), m(2,2));
 }
 
-
 void Preintegrator::update() {
     _read();
     _preintegrate();
 }
 
 void Preintegrator::zero_integral() {
-    // Delta_t = 0;
-    // _Delta_p.zeros();
-    // Delta_v.zeros();
-    // Delta_R.eye();
+    Delta_t = 0;
+    Delta_p.zeros();
+    Delta_v.zeros();
+    Delta_R.eye();
 }
 
 auto Preintegrator::_rot_exp(TMF3 &vect,float dt) {
@@ -60,9 +59,10 @@ void Preintegrator::_preintegrate() {
     // print_TF3(_sample_omega);
 
     float del_t = (float)(_this_sample_t - _prev_sample_t)*(0.000001);
+    auto del_R =_rot_exp(_sample_omega,del_t);
     auto del_p = del_t*del_t*0.5*_sample_accel;
     auto del_v = del_t*_sample_accel;
-    auto del_R =_rot_exp(_sample_omega,del_t);
+    
 
     // Serial.printf("dels, dt: %f\n",del_t);
     // print_TF3(del_p);
@@ -80,17 +80,23 @@ void Preintegrator::_preintegrate() {
     // print_TF3x3(Delta_R);
 
     _prev_sample_t = _this_sample_t;
+    integrate_counter ++;
+}
+
+
+TF3 Preintegrator::get_accelerations() {
+    return TF3(_sample_accel);
 }
 
 void Preintegrator::print() {
-    Serial.printf(">t:%f\n", Delta_t);
-    Serial.printf(">px:%f\n",Delta_p(0));
-    Serial.printf(">py:%f\n",Delta_p(1));
-    Serial.printf(">pz:%f\n",Delta_p(2));
-    Serial.printf(">vx:%f\n",Delta_v(0));
-    Serial.printf(">vy:%f\n",Delta_v(1));
-    Serial.printf(">vz:%f\n",Delta_v(2));
-    Serial.printf("R:[\n[%f, %f, %f]\n[%f, %f, %f]\n[%f, %f, %f]\n] \n", Delta_R(0,0), Delta_R(0,1), Delta_R(0,2), Delta_R(1,0), Delta_R(1,1), Delta_R(1,2), Delta_R(2,0), Delta_R(2,1), Delta_R(2,2));
+    Serial.printf(">dt:%f\n", Delta_t);
+    Serial.printf(">dpx:%f\n",Delta_p(0));
+    Serial.printf(">dpy:%f\n",Delta_p(1));
+    Serial.printf(">dpz:%f\n",Delta_p(2));
+    Serial.printf(">dvx:%f\n",Delta_v(0));
+    Serial.printf(">dvy:%f\n",Delta_v(1));
+    Serial.printf(">dvz:%f\n",Delta_v(2));
+    Serial.printf("dR:[\n[%f, %f, %f]\n[%f, %f, %f]\n[%f, %f, %f]\n] \n", Delta_R(0,0), Delta_R(0,1), Delta_R(0,2), Delta_R(1,0), Delta_R(1,1), Delta_R(1,2), Delta_R(2,0), Delta_R(2,1), Delta_R(2,2));
 }
 
 
@@ -104,24 +110,28 @@ void BMI323::init() {
     delay(50);    
     /*
     * Acc_Conf P.91
-    * mode:        0x7000  -> High performance
-    * average:     0x0000  -> No
-    * filtering:   0x0000  -> ODR/2
-    * range:       0x0000  -> 2g
-    * ODR:         0x000B  -> 800Hz
-    * Total:       0x700B
+    * mode:        0b111  -> High performance
+    * average:     0b110  -> 64 samples
+    * filtering:   0b1    -> ODR/4
+    * range:       0b000  -> 2g
+    * ODR:         0b1101 -> 3.2kHz
+    * Total:       0b0111011010001101
+    *              0x768D
     */
-    _writeRegister16(0x20,0x700B);//Setting accelerometer  
+    _writeRegister16(0x20,0x768D);//Setting accelerometer  
     /*
     * Gyr_Conf P.93
-    * mode:        0x7000  -> High performance
-    * average:     0x0000  -> No
-    * filtering:   0x0000  -> ODR/2
-    * range:       0x0000  -> 125dps
-    * ODR:         0x000B  -> 800Hz
-    * Total:       0x700B
+    * mode:        0b111  -> High performance
+    * average:     0b110  -> 64 samples
+    * filtering:   0b1    -> ODR/4
+    * range:       0b000  -> 2g
+    * ODR:         0b1101 -> 3.2kHz
+    * Total:       0b0111011010001101
+    *              0x768D
     */
-    _writeRegister16(0x21,0x700B);//Setting gyroscope  
+    _writeRegister16(0x21,0x768D);//Setting gyroscope  
+
+    _prev_sample_t = _this_sample_t;
 }
 
 
@@ -191,24 +201,27 @@ void BMI323::_read()  {
     _this_sample_t |= static_cast<uint32_t>(ret[16]) << 16; 
     _this_sample_t |= static_cast<uint32_t>(ret[17]) << 24; 
     _this_sample_t *= 39.0625;
+
+    read_counter ++;
     
 }
 
 
 void BMI323::print_raw() {
     Serial.print("BMI323 Raw: ");
-    Serial.print(">t:");
+    Serial.print(">rt:");
     Serial.println(_this_sample_t);
-    Serial.print(">ax:");
+    Serial.print(">rax:");
     Serial.println(_accels[0]);
-    Serial.print(">ay:");
+    Serial.print(">ray:");
     Serial.println(_accels[1]);
-    Serial.print(">az:");
+    Serial.print(">raz:");
     Serial.println(_accels[2]);
-    Serial.print(">gx:");
+    Serial.print(">rgx:");
     Serial.println(_omegas[0]);
-    Serial.print(">gy:");
+    Serial.print(">rgy:");
     Serial.println(_omegas[1]);
-    Serial.print(">gz:");
+    Serial.print(">rgz:");
     Serial.println(_omegas[2]);
 }
+

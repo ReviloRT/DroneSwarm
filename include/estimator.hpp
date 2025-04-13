@@ -20,17 +20,19 @@ public:
     TF3 pos;
     TF3 vel;
     TF3x3 rot;
+    uint32_t update_counter = 0;
 
     EstimatorBase() :
-    t_integrated(0),
-    pos{0},
-    vel{0}
+    t_integrated(0.0f),
+    pos{0.0f,0.0f,0.0f},
+    vel{0.0f,0.0f,0.0f}
     {
         rot.eye();
-        t_start = millis()/1000.0f;
+        t_start = 0;
     };
     virtual void init() {};
     virtual void update() {};
+    void print();
 
 };
 
@@ -38,11 +40,13 @@ template <typename T>
 class IMU_Estimator : public EstimatorBase {
 public:
     T imu;
+    TF3 gravity{0.0f,0.0f,0.0f};
     
     IMU_Estimator() : EstimatorBase() {};
 
     void init() override;
     void update() override;
+    void set_gravity();
 };
 
 template class IMU_Estimator<BMI323>;

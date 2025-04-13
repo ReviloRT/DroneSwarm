@@ -16,6 +16,12 @@ void PID<T>::init(T &Kp, T &Ki, T &Kd) {
 }
 
 template <class T>
+void PID<T>::set(T &setpoint) {
+    _setpoint = setpoint;
+}
+
+
+template <class T>
 T& PID<T>::update(T &state) {
     float dt = _get_dt();
     auto error = _setpoint - state;

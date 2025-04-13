@@ -27,5 +27,5 @@ void ThrustControl::update(TF4 new_effort) {
 }
 
 int ThrustControl::_thrust_to_pwm(float thrust) {
-    return static_cast<int>(min(max(thrust*THRUST_TO_PWM_SCALING,-1.0f),1.0f) * 128);
+    return static_cast<int>(min(max(thrust*THRUST_TO_PWM_SCALING,-1.0f),1.0f) * ROTOR_PWM_RESOLUTION);
 }
