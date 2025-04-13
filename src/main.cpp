@@ -7,7 +7,27 @@
 ThrustControl thrust;
 IMU_Estimator<BMI323> est;
 
-int counter = 0;
+class Timer {
+  int next_time = 0;
+  float rate = 1;
+
+  public:
+
+  Timer(int rate): rate(rate) {};
+  
+  bool run() {
+    if (next_time == 0) {
+      next_time = millis() + 1.0/rate;
+      return false;
+    }
+    int now = millis();
+    if (next_time < now) {
+      next_time += 1.0/rate; 
+      return true;
+    }
+    return false;
+  }
+};
 
 void setup() {
   init_leds();
@@ -29,23 +49,29 @@ void setup() {
 
 }
 
+Timer timerA(10);
+Timer timerB(5);
+
 void loop() {
   est.imu.update();
 
-  if (counter*1000 < millis()*10) {
-    counter ++;
+  if (timerA.run()) {
     est.update();
-    // if (counter % 10) {
-      Serial.print("Integrations: ");
-      Serial.println(est.update_counter);
-      Serial.print("Reads: ");
-      Serial.println(est.imu.read_counter);
-      Serial.print("Preintegrations: ");
-      Serial.println(est.imu.integrate_counter);
-      est.print();
-      est.imu.print();
-      est.imu.print_raw();
-    // }
+    Serial.print("Integrations: ");
+    Serial.println(est.update_counter);
+    Serial.print("Reads: ");
+    Serial.println(est.imu.read_counter);
+    Serial.print("Preintegrations: ");
+    Serial.println(est.imu.integrate_counter);
+    est.print();
+    est.imu.print();
+    est.imu.print_raw();
+  }
+
+  if (timerB.run()) {
+    TF4 effort = {0.1,0.0,0.0,0.0};
+    thrust.update(effort);
   }
   
+
 }
