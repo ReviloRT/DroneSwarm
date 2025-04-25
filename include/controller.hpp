@@ -25,13 +25,14 @@ public:
     TF4 control_effort;
 
     Controller() : 
-        control_effort{0},
         mixer{
             { 0.25,-0.25/QUAD_MIXER_LENGTH, 0.25/QUAD_MIXER_LENGTH, 0.25/QUAD_MIXER_GAMMA},
             { 0.25, 0.25/QUAD_MIXER_LENGTH,-0.25/QUAD_MIXER_LENGTH, 0.25/QUAD_MIXER_GAMMA},
             { 0.25, 0.25/QUAD_MIXER_LENGTH, 0.25/QUAD_MIXER_LENGTH,-0.25/QUAD_MIXER_GAMMA},
             { 0.25,-0.25/QUAD_MIXER_LENGTH,-0.25/QUAD_MIXER_LENGTH,-0.25/QUAD_MIXER_GAMMA}
-        } {};
+        },
+        control_effort{0}
+        {};
 
     void init();
     void on();

@@ -30,7 +30,7 @@ void Rotors::init() {
 }
 
 void Rotors::on(int duty) {
-    analogWrite(PIN_ESC_EN,240);
+    analogWrite(PIN_ESC_EN,duty);
 }
 
 void Rotors::off() {

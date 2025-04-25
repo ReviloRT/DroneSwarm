@@ -38,11 +38,13 @@ public:
 
     Preintegrator() : 
         _prev_sample_t(0), 
+        _sample_accel(_accels), 
+        _sample_omega(_omegas),
+        
         _this_sample_t(0), 
         _accels{0},
         _omegas{0},
-        _sample_accel(_accels), 
-        _sample_omega(_omegas),
+        
         Delta_t(0),
         Delta_p(0),
         Delta_v(0) 
