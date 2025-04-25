@@ -40,17 +40,6 @@ public:
     TF3x3 Delta_R;
 
     Preintegrator() : 
-<<<<<<< HEAD
-        _prev_sample_t(0.0f), 
-        _this_sample_t(0.0f), 
-        _accels{0.0f},
-        _omegas{0.0f},
-        _sample_accel(_accels), 
-        _sample_omega(_omegas),
-        Delta_t(0.0f),
-        Delta_p(0.0f),
-        Delta_v(0.0f) 
-=======
         _prev_sample_t(0), 
         _sample_accel(_accels), 
         _sample_omega(_omegas),
@@ -62,7 +51,6 @@ public:
         Delta_t(0),
         Delta_p(0),
         Delta_v(0) 
->>>>>>> fa349787ffc161eeb8c25734b527dae84c216270
         { Delta_R.eye();};
     
     virtual void init() {};
