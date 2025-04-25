@@ -7,7 +7,7 @@
 #define QUAD_MIXER_LENGTH 1.0f
 #define QUAD_MIXER_GAMMA 1.0f
 #define ROTOR_PWM_RESOLUTION 128
-#define THRUST_TO_PWM_SCALING 5.0f
+#define THRUST_TO_PWM_SCALING 1.0f
 
 using namespace Fastor;
 
