@@ -16,13 +16,16 @@
 //     // _vel_pid.init(1,0,0);
 // }
 
-// void CascadedPID::update() {
-//     // TF3 vel_t = _pos_pid.update(_est.pos);
-//     // TF3 acc_t = _vel_pid.update(_est.vel - vel_t);
-    
-//     // TF4 control_effort(0);
-//     // control_effort[0] = acc_t.mag();
-//     // control
-    
+// void Controller::update(TF4 new_effort) {
+//     control_effort(all) = new_effort(all);
+//     TF4 thrusts = mixer % control_effort;
 
+//     rotors.power(MOTOR_1,_thrust_to_pwm(thrusts(0)));
+//     rotors.power(MOTOR_2,_thrust_to_pwm(thrusts(1)));
+//     rotors.power(MOTOR_3,_thrust_to_pwm(thrusts(2)));
+//     rotors.power(MOTOR_4,_thrust_to_pwm(thrusts(3)));
+// }
+
+// int Controller::_thrust_to_pwm(float thrust) {
+//     return static_cast<int>(min(max(thrust*THRUST_TO_PWM_SCALING,-1.0f),1.0f) * ROTOR_PWM_RESOLUTION);
 // }
