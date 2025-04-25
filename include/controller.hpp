@@ -22,6 +22,19 @@
 // public:
 //     CascadedPID(Rotors &rot, EstimatorBase &est) : _rot(rot), _est(est) {};
 
+//     Controller() : 
+//         mixer{
+//             { 0.25,-0.25/QUAD_MIXER_LENGTH, 0.25/QUAD_MIXER_LENGTH, 0.25/QUAD_MIXER_GAMMA},
+//             { 0.25, 0.25/QUAD_MIXER_LENGTH,-0.25/QUAD_MIXER_LENGTH, 0.25/QUAD_MIXER_GAMMA},
+//             { 0.25, 0.25/QUAD_MIXER_LENGTH, 0.25/QUAD_MIXER_LENGTH,-0.25/QUAD_MIXER_GAMMA},
+//             { 0.25,-0.25/QUAD_MIXER_LENGTH,-0.25/QUAD_MIXER_LENGTH,-0.25/QUAD_MIXER_GAMMA}
+//         },
+//         control_effort{0}
+//         {};
+
 //     void init();
-//     void update();
+//     void on();
+//     void off();
+//     void update(TF4 control_effort);
+    
 // };
